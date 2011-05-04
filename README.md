@@ -17,5 +17,5 @@ Include the loggly.js file in a web page.  Create a new HTTP input in your Loggl
 This should result in the page posting an event to Loggly that looks something like this: 
 
 <pre>
-source=castor url=http://titus:8002/ browser=MozillaNetscape5.0 (Macintosh; Intel Mac OS X 10_6_7) AppleWebKit/534.24 (KHTML, like Gecko) Chrome/11.0.696.57 Safari/534.24 height=629
+source=castor url=http://www.geekceo.com/ browser=MozillaNetscape5.0 (Macintosh; Intel Mac OS X 10_6_7) AppleWebKit/534.24 (KHTML, like Gecko) Chrome/11.0.696.57 Safari/534.24 height=629
 </pre>
