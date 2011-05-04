@@ -1,0 +1,24 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title>Loggly Javascript Logging Example</title> 
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link rel="shortcut icon" href="/images/favicon.ico">
+  <link rel="stylesheet" href="/css/reset.css" type="text/css" />
+  <link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon" />
+  <script src="/js/loggly.js" type="text/javascript"></script>
+
+  <script type="text/javascript">
+    window.onload=function(){
+      castor = new loggly({ url: 'http://logs.loggly.com/inputs/a2e839e9-4827-49aa-9d28-e18e5ba5a818?rt=1', level: 'info'});
+      castor.info("url="+window.location.href + " browser=" + castor.user_agent + " height=" + castor.browser_size.height);
+    }
+  </script>
+
+</head>
+<body>
+  <div>
+    <p>© 2011 <a href="http://loggly.com/">Loggly, Inc.</a></p>
+  </div>
+</body>
+</html>
