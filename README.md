@@ -19,3 +19,6 @@ This should result in the page posting an event to Loggly that looks something l
 <pre>
 source=castor url=http://www.geekceo.com/ browser=MozillaNetscape5.0 (Macintosh; Intel Mac OS X 10_6_7) AppleWebKit/534.24 (KHTML, like Gecko) Chrome/11.0.696.57 Safari/534.24 width=1009
 </pre>
+
+## Log Levels
+Set the log level using the *level: 'info'* parameter.  Call the library using the error, warn, info, debug and log methods.  Events called with these methods that match or exceed the current logging level will be forwarded on to Loggly.
