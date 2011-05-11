@@ -3,9 +3,9 @@
 JavaScript library to do cross site log POSTing to Loggly.  You can use this to log directly out of your JavaScript to Loggly, or just record the fact someone hit a page on your site.
 
 ## Installation
-Include the loggly.js file in a web page.  You can use our CloudFront version located at:
+Include the loggly.js file in a web page.  You can use our CloudFront version by including this:
 
-<pre>http://cloudfront.loggly.com/js/loggly-0.1.0.js</pre>
+<pre><script src="http://cloudfront.loggly.com/js/loggly-0.1.0.js" type="text/javascript"></script></pre>
 
 Create a new HTTP input in your Loggly account, make a note of the URL, and then edit and use the following code in that same web page:
 
