@@ -9,13 +9,13 @@
  * 
  * Uses methods from janky.post, copyright(c) 2011 Thomas Rampelberg <thomas@saunter.org>
  *  
- * Sample usage (replace with your own HTTP input URL):
+ * Sample usage (replace with your own Loggly HTTP input URL):
 
   <script src="/js/loggly.js" type="text/javascript"></script>
   <script type="text/javascript">
     window.onload=function(){
       castor = new loggly({ url: 'http://logs.loggly.com/inputs/a4e839e9-4227-49aa-9d28-e18e5ba5a818?rt=1', level: 'WARN'});
-      castor.log("source=castor url="+window.location.href + " browser=" + castor.user_agent + " height=" + castor.browser_size.height);
+      castor.log("url="+window.location.href + " browser=" + castor.user_agent + " height=" + castor.browser_size.height);
     }
   </script>
 
@@ -26,7 +26,7 @@
     this.user_agent = get_agent();
     this.browser_size = get_size();
     log_methods = {'error': 5, 'warn': 4, 'info': 3, 'debug': 2, 'log': 1};
-    if (!opts.url) throw new Error("Please include a URL to use to send data.");
+    if (!opts.url) throw new Error("Please include a Loggly HTTP URL.");
     if (!opts.level) { 
       this.level = log_methods['info'];
     } else {
@@ -69,6 +69,9 @@
       form.setAttribute("method", "post");
       janky._input(iframe, form, opts.data);
       form.submit();
+	  setTimeout(function(){
+        document.body.removeChild(iframe);              
+      }, 2000);
     });
   };
   this.janky._form = function(cb) {
