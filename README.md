@@ -1,6 +1,6 @@
 # loggly-castor
 
-JavaScript library to do cross site POSTing to Loggly.
+JavaScript library to do cross site log POSTing to Loggly.  You can use this to log directly out of your JavaScript to Loggly, or just record the fact someone hit a page on your site.
 
 ## Installation
 Include the loggly.js file in a web page.  Create a new HTTP input in your Loggly account, make a note of the URL, and then edit and use the following code in that same web page:
