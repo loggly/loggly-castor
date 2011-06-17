@@ -22,79 +22,12 @@
  */  
 
 (function() {
-  this.loggly = function(opts) {
-    this.user_agent = get_agent();
-    this.browser_size = get_size();
-    log_methods = {'error': 5, 'warn': 4, 'info': 3, 'debug': 2, 'log': 1};
-    if (!opts.url) throw new Error("Please include a Loggly HTTP URL.");
-    if (!opts.level) { 
-      this.level = log_methods['info'];
-    } else {
-      this.level = log_methods[opts.level];
-    }
-    this.log = function(data) {
-      if (log_methods['log'] == this.level) { 
-        opts.data = data;
-        janky(opts); 
-      }
-    };
-    this.debug = function(data) {
-      if (log_methods['debug'] >= this.level) { 
-        opts.data = data;
-        janky(opts); 
-      }
-    };
-    this.info = function(data) {
-      if (log_methods['info'] >= this.level) { 
-        opts.data = data;
-        janky(opts); 
-      }
-    };
-    this.warn = function(data) {
-      if (log_methods['warn'] >= this.level) { 
-        opts.data = data;
-        janky(opts); 
-      }
-    };
-    this.error = function(data) {
-      if (log_methods['error'] >= this.level) { 
-        opts.data = data;
-        janky(opts); 
-      }
-    };
-  };
-  this.janky = function(opts) {
-    janky._form(function(iframe, form) {
-      form.setAttribute("action", opts.url);
-      form.setAttribute("method", "post");
-      janky._input(iframe, form, opts.data);
-      form.submit();
-	  setTimeout(function(){
-        document.body.removeChild(iframe);              
-      }, 2000);
-    });
-  };
-  this.janky._form = function(cb) {
-    var iframe = document.createElement("iframe");
-    document.body.appendChild(iframe);
-    iframe.style.display = "none";
-    setTimeout(function() {
-      var form = iframe.contentWindow.document.createElement("form");
-      iframe.contentWindow.document.body.appendChild(form);
-      cb(iframe, form);
-    }, 0);
-  };
-  this.janky._input = function(iframe, form, data) {
-    var inp = iframe.contentWindow.document.createElement("input");
-    inp.setAttribute("type", "hidden");
-    inp.setAttribute("name", "source");
-    inp.value = "castor " + data;
-    form.appendChild(inp);
-  };
-  this.get_agent = function () {
+  //define helpers
+  function get_agent () {
     return navigator.appCodeName + navigator.appName + navigator.appVersion;
   };
-  this.get_size = function () {
+
+  function get_size () {
     var width = 0; var height = 0;
     if( typeof( window.innerWidth ) == 'number' ) {
       width = window.innerWidth; height = window.innerHeight;
@@ -104,6 +37,62 @@
       width = document.body.clientWidth; height = document.body.clientHeight;
     }
     return {'height': height, 'width': width};
+  };
+
+  var log_methods = {'error': 5, 'warn': 4, 'info': 3, 'debug': 2, 'log': 1};
+
+  function janky (opts) {
+    janky._form(function(iframe, form) {
+      form.setAttribute("action", opts.url);
+      form.setAttribute("method", "post");
+      janky._input(iframe, form, opts.data);
+      form.submit();
+      setTimeout(function(){
+        document.body.removeChild(iframe);              
+      }, 2000);
+    });
+  };
+
+  janky._form = function(cb) {
+    var iframe = document.createElement("iframe");
+    document.body.appendChild(iframe);
+    iframe.style.display = "none";
+    setTimeout(function() {
+      var form = iframe.contentWindow.document.createElement("form");
+      iframe.contentWindow.document.body.appendChild(form);
+      cb(iframe, form);
+    }, 0);
+  };
+
+  janky._input = function(iframe, form, data) {
+    var inp = iframe.contentWindow.document.createElement("input");
+    inp.setAttribute("type", "hidden");
+    inp.setAttribute("name", "source");
+    inp.value = "castor " + data;
+    form.appendChild(inp);
+  };
+
+  //export loggly to global
+  this.loggly = function(opts) {
+    this.user_agent = get_agent();
+    this.browser_size = get_size();
+    if (!opts.url) throw new Error("Please include a Loggly HTTP URL.");
+    if (!opts.level) {
+      this.level = log_methods['info'];
+    } else {
+      this.level = log_methods[opts.level];
+    }
+    var logger_factory = function(level_name) {
+      return function(data) {
+        if (log_methods[level_name] >= this.level) {
+          opts.data = data;
+          janky(opts);
+        }
+      };
+    };
+    for (name in log_methods) {
+      this[name] = logger_factory(name);
+    }
   };
 })();
 
