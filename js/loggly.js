@@ -85,6 +85,12 @@
     var logger_factory = function(level_name) {
       return function(data) {
         if (log_methods[level_name] >= this.level) {
+          if (typeof(data) != "string") {
+            try {
+              data = JSON.stringify(data);
+            }
+            catch (error) {}
+          }
           opts.data = data;
           janky(opts);
         }
