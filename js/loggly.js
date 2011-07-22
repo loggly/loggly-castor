@@ -80,7 +80,7 @@
     if (!opts.level) {
       this.level = log_methods['info'];
     } else {
-      this.level = log_methods[opts.level];
+      this.level = log_methods[opts.level.toLowerCase()];
     }
     var logger_factory = function(level_name) {
       return function(data) {
