@@ -10,7 +10,7 @@
     var scr = document.createElement("script"); 
     var host = (("https:" == document.location.protocol) ? "https://d3eyf2cx8mbems.cloudfront.net" : "http://d3eyf2cx8mbems.cloudfront.net");
     scr.type = "text/javascript";
-    scr.src = host + "/js/loggly-0.1.0.js";
+    scr.src = host + "/js/loggly-0.2.0.js";
     document.documentElement.firstChild.appendChild(scr);
   </script>
 
@@ -18,8 +18,8 @@
     window.onload=function(){ 
       var key = "a00039e9-4827-49aa-9d28-e18e5ba5a818";
       var host = (("https:" == document.location.protocol) ? "https://logs.loggly.com" : "http://logs.loggly.com");
-      castor = new loggly({ url: host+'/inputs/'+key+'?rt=1', level: 'log'});
-      castor.log("url="+window.location.href + " browser=" + castor.user_agent + " height=" + castor.browser_size.height);
+      castor = new loggly.castor({ url: host+'/inputs/'+key, level: 'log'});
+      castor.log({url:window.location.href});
     }
   </script>
 
@@ -27,7 +27,7 @@
 <body>
   <div>
     <p>sending test event</p>
-    <p>© 2011 <a href="http://loggly.com/">Loggly, Inc.</a></p>
+    <p>© 2012 <a href="http://loggly.com/">Loggly, Inc.</a></p>
   </div>
 </body>
 </html>

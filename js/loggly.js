@@ -4,78 +4,32 @@
  * Copyright (c) 2011 Loggly, Inc.
  * All rights reserved.
  *
- * Author: Kord Campbell <kord@loggly.com>
- * Date: May 2, 2011
+ * Author: Mike Blume <mike@loggly.com>
+ * Date: April 14, 2012
  * 
- * Uses methods from janky.post, copyright(c) 2011 Thomas Rampelberg <thomas@saunter.org>
- *  
  * Sample usage (replace with your own Loggly HTTP input URL):
 
   <script src="/js/loggly.js" type="text/javascript"></script>
   <script type="text/javascript">
     window.onload=function(){
-      castor = new loggly({ url: 'http://logs.loggly.com/inputs/a4e839e9-4227-49aa-9d28-e18e5ba5a818?rt=1', level: 'WARN'});
-      castor.log("url="+window.location.href + " browser=" + castor.user_agent + " height=" + castor.browser_size.height);
+      // use http or https depending on your page context
+      castor = new loggly.castor({ url: 'http://logs.loggly.com/inputs/a4e839e9-4227-49aa-9d28-e18e5ba5a818', level: 'WARN'});
+      castor.log({url: window.location.href});
     }
   </script>
 
  */  
 
 (function() {
-  //define helpers
-  function get_agent () {
-    return navigator.appCodeName + navigator.appName + navigator.appVersion;
-  };
-
-  function get_size () {
-    var width = 0; var height = 0;
-    if( typeof( window.innerWidth ) == 'number' ) {
-      width = window.innerWidth; height = window.innerHeight;
-    } else if( document.documentElement && ( document.documentElement.clientWidth || document.documentElement.clientHeight ) ) {
-      width = document.documentElement.clientWidth; height = document.documentElement.clientHeight;
-    } else if( document.body && ( document.body.clientWidth || document.body.clientHeight ) ) {
-      width = document.body.clientWidth; height = document.body.clientHeight;
-    }
-    return {'height': height, 'width': width};
-  };
 
   var log_methods = {'error': 5, 'warn': 4, 'info': 3, 'debug': 2, 'log': 1};
 
-  function janky (opts) {
-    janky._form(function(iframe, form) {
-      form.setAttribute("action", opts.url);
-      form.setAttribute("method", "post");
-      janky._input(iframe, form, opts.data);
-      form.submit();
-      setTimeout(function(){
-        document.body.removeChild(iframe);              
-      }, 2000);
-    });
-  };
+  var send_data = function(opts) {
+    var img = document.createElement("img");
+    img.src = opts.url + ".gif?PLAINTEXT=" + encodeURIComponent(opts.data) + "&DT=" + encodeURIComponent(Date());
+  }
 
-  janky._form = function(cb) {
-    var iframe = document.createElement("iframe");
-    document.body.appendChild(iframe);
-    iframe.style.display = "none";
-    setTimeout(function() {
-      var form = iframe.contentWindow.document.createElement("form");
-      iframe.contentWindow.document.body.appendChild(form);
-      cb(iframe, form);
-    }, 0);
-  };
-
-  janky._input = function(iframe, form, data) {
-    var inp = iframe.contentWindow.document.createElement("input");
-    inp.setAttribute("type", "hidden");
-    inp.setAttribute("name", "source");
-    inp.value = "castor " + data;
-    form.appendChild(inp);
-  };
-
-  //export loggly to global
-  this.loggly = function(opts) {
-    this.user_agent = get_agent();
-    this.browser_size = get_size();
+  var castor = function(opts) {
     if (!opts.url) throw new Error("Please include a Loggly HTTP URL.");
     if (!opts.level) {
       this.level = log_methods['info'];
@@ -92,7 +46,7 @@
             catch (error) {}
           }
           opts.data = data;
-          janky(opts);
+          send_data(opts);
         }
       };
     };
@@ -100,5 +54,11 @@
       this[name] = logger_factory(name);
     }
   };
+
+  if (loggly) {
+    loggly.castor = castor;
+  } else {
+    this.loggly = {castor: castor};
+  }
 })();
 
