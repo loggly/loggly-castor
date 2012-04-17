@@ -55,8 +55,8 @@
     }
   };
 
-  if (loggly) {
-    loggly.castor = castor;
+  if (this.loggly) {
+    this.loggly.castor = castor;
   } else {
     this.loggly = {castor: castor};
   }
