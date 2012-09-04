@@ -1,33 +1,93 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <title>Loggly Javascript Logging Example</title> 
+  <title>loggly-castor - Client-side JavaScript Logging Example</title>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
   <link rel="shortcut icon" href="/images/favicon.ico">
   <link rel="stylesheet" href="/css/reset.css" type="text/css" />
   <link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon" />
-  <script type="text/JavaScript">
-    var scr = document.createElement("script"); 
-    var host = (("https:" == document.location.protocol) ? "https://d3eyf2cx8mbems.cloudfront.net" : "http://d3eyf2cx8mbems.cloudfront.net");
-    scr.type = "text/javascript";
-    scr.src = host + "/js/loggly-0.2.1.js";
-    document.documentElement.firstChild.appendChild(scr);
-  </script>
-
-  <script type="text/javascript">
-    window.onload=function(){ 
-      var key = "a00039e9-4827-49aa-9d28-e18e5ba5a818";
-      var host = (("https:" == document.location.protocol) ? "https://logs.loggly.com" : "http://logs.loggly.com");
-      castor = new loggly.castor({ url: host+'/inputs/'+key, level: 'log'});
-      castor.log({url:window.location.href});
-    }
-  </script>
-
+  <script src="https://raw.github.com/gist/3620903/1dd5b6093046043f9c22d0eac47a616870331f34/getscript.min.js"></script>
 </head>
 <body>
   <div>
-    <p>sending test event</p>
-    <p>© 2012 <a href="http://loggly.com/">Loggly, Inc.</a></p>
+    <h1>loggly-castor example (<a href="#" id="view-source">view source</a>)</h1>
+    <p>&copy; 2012 <a href="http://loggly.com/">Loggly, Inc.</a></p>
   </div>
+  <script>
+
+    // # loggly-castor example by @niftylettuce
+
+    // castor namespace
+    var _castor = {}
+
+    // loggly-castor's protocol relative paths
+    _castor.paths = {
+        http  : "http://cloudfront.loggly.com/js/loggly-0.2.1.js"
+      , https : "https://d3eyf2cx8mbems.cloudfront.net/js/loggly-0.2.1.js"
+    }
+    _castor.p = document.location.protocol
+    _castor.p = _castor.p.substring(0, _castor.p.length - 1)
+    _castor.src = _castor.paths[_castor.p]
+
+    // loggly namespace
+    _loggly = {}
+    _loggly.paths = {
+        http  : "http://logs.loggly.com"
+      , https : "https://logs.loggly.com"
+    }
+    _loggly.src = _loggly.paths[_castor.p]
+    _loggly.key = "a00039e9-4827-49aa-9d28-e18e5ba5a818"
+    _loggly.config = {
+        url   : this.src + '/inputs/' + this.key
+      , level : 'log'
+    }
+
+    // global castor namespace
+    var castor
+
+    _castor.onload = function() {
+      castor.log({
+          source : 'castor'
+        , url    : window.location.href
+      })
+    }
+
+    _castor.onerror = function(err, file, line) {
+      castor.log({
+          source : 'castor'
+        , url    : window.location.href
+        , err    : err
+        , file   : file
+        , line   : line
+      })
+    }
+
+    _castor.cb = function() {
+      castor = new loggly.castor(_loggly.config)
+      // jQuery users would use:
+      // `$(_castor.onload)`
+      // (or)
+      // `$(function() { _castor.onload() })`
+      window.onload  = _castor.onload
+      window.onerror = _castor.onerror
+    }
+
+    console.log('_castor', _castor)
+    console.log('_loggly', _loggly)
+
+    getScript(_castor.src, _castor.cb)
+
+  </script>
+  <script>
+    // example stuff (ignore this)
+    (function(d, w) {
+      var $s  = d.getElementById('view-source')
+        , url = 'view-source:' + w.location.href
+      $s.onclick = viewSource
+      function viewSource() {
+        w.location = url
+      }
+    }(document, window))
+  </script>
 </body>
 </html>
