@@ -3,16 +3,18 @@
 <head>
   <title>loggly-castor - Client-side JavaScript Logging Example</title>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-  <link rel="shortcut icon" href="/images/favicon.ico">
-  <link rel="stylesheet" href="/css/reset.css" type="text/css" />
-  <link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon" />
+  <link rel="shortcut icon" href="images/favicon.ico">
+  <link rel="stylesheet" href="css/reset.css" type="text/css" />
+  <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon" />
   <script src="https://raw.github.com/gist/3620903/1dd5b6093046043f9c22d0eac47a616870331f34/getscript.min.js"></script>
 </head>
 <body>
+
   <div>
     <h1>loggly-castor example (<a href="#" id="view-source">view source</a>)</h1>
     <p>&copy; 2012 <a href="http://loggly.com/">Loggly, Inc.</a></p>
   </div>
+
   <script>
 
     // # loggly-castor example by @niftylettuce
@@ -72,12 +74,9 @@
       window.onerror = _castor.onerror
     }
 
-    console.log('_castor', _castor)
-    console.log('_loggly', _loggly)
-
     getScript(_castor.src, _castor.cb)
-
   </script>
+
   <script>
     // example stuff (ignore this)
     (function(d, w) {
@@ -89,5 +88,6 @@
       }
     }(document, window))
   </script>
+
 </body>
 </html>
